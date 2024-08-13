@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tailwind Component Viewer</title>
+    <meta name="description" content="Ready layout for viewing TailwindCSS components with the ability to save them and convert them to HandlebarsJS Sintax">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" />
+    <link rel="icon" type="image/png" sizes="32x32" href="https://placehold.co/32/0284c7/white/?text=BY" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                100: "#e0f2fe",
+                600: "#0284c7",
+                700: "#0369a1",
+              },
+              secondary: '#4B5DFF',
+            },
+          },
+          fontFamily: {
+            sans: ["Lato", "sans-serif"],
+          },
+        },
+      };
+    </script>
+    <style>
+      pre {
+        margin: 0;
+      }
+      .copy-feedback {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border-radius: 5px;
+        z-index: 1000;
+      }
+      .component-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      @media (max-width: 767px) {
+        .sidebar {
+          transform: translateX(-100%);
+          transition: transform 0.3s ease-in-out;
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 font-sans transition-colors duration-200">
+    <div class="flex h-screen">
+      <aside id="sidebar" class="sidebar w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 p-4 fixed h-full z-10 md:relative md:translate-x-0">
+        <h1 class="text-xl font-semibold mb-6 flex items-center">
+          <i data-lucide="layout-dashboard" stroke-width="2.7" class="text-primary-600 dark:text-primary-100 w-4 h-4 mr-1"></i></span>
+          <span class="text-primary-600">Build</span>Y TW</span>
+        </h1>
+        <nav>
+          <ul class="space-y-2">
+            <li><a href="/" class="block px-4 py-2 rounded-lg bg-primary-100 text-primary-700 dark:bg-primary-700 dark:text-primary-100 text-sm"><i data-lucide="layout-list" class="text-primary-600 dark:text-primary-100 w-4 h-4 mb-1 mr-1 inline"></i>Components</a></li>
+            <li><a href="https://github.com/hinddy/tailwind-builder/wiki/" class="block px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-sm"><i data-lucide="book-open-check" class="text-primary-600 dark:text-primary-100 w-4 h-4 mb-1 mr-1 inline"></i>Documentation</a></li>
+            <li><a href="https://github.com/hinddy/" class="block px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-sm"><i data-lucide="github" class="text-primary-600 dark:text-primary-100 w-4 h-4 mb-1 mr-1 inline"></i>Releases<span class="ml-1 text-slate-500 bg-slate-100 font-medium px-2">v.1.0.1</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="flex-1 flex-col overflow-x-hidden overflow-y-auto bg-slate-100 dark:bg-slate-900">
+        <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 flex justify-between items-center">
+          <button id="sidebar-toggle" class="md:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+          <input type="text" id="search" class="w-25 px-4 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-100 text-primary-600 dark:text-primary-100 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-accent-1 transition duration-200" placeholder="Search...">
+          <div class="flex">
+            <button id="dark-mode-toggle" class="mr-4">
+              <i data-lucide="sun" class="w-5 h-5"></i>
+            </button>
+            <button id="exportJsonBtn" class="bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold py-2 px-4 rounded-lg">Export to JSON</button>
+          </div>
+        </header>
+        <div class="container max-w-7xl mx-auto p-4">
+          <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">Components</h1>
+          </div>
+          <div id="componentsContainer"></div>
+        </div>
+        <div id="copyFeedback" class="copy-feedback">Copied to clipboard!</div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Component data
+        const components = {
+          promo_section: {
+            title: "Promo Section",
+            content: "The promotional section consists of three cards and a creative background",
+            code: `
+  <section class="mb-24 relative overflow-hidden bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-3xl px-12 py-24">
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      <h2 class="text-4xl font-bold mb-6">Unleash Your Creativity</h2>
+      <p class="text-xl mb-12">Our design system provides you with the tools to bring your ideas to life. Explore the possibilities and create stunning interfaces effortlessly.</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white dark:bg-slate-700 p-6 rounded-xl shadow-custom">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+          </svg>
+          <h3 class="text-xl font-semibold mb-2">Customizable</h3>
+          <p>Easily adapt components to fit your brand and style.</p>
+        </div>
+        <div class="bg-white dark:bg-slate-700 p-6 rounded-xl shadow-custom">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <h3 class="text-xl font-semibold mb-2">Responsive</h3>
+          <p>All components are fully responsive and mobile-friendly.</p>
+        </div>
+        <div class="bg-white dark:bg-slate-700 p-6 rounded-xl shadow-custom">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <h3 class="text-xl font-semibold mb-2">Performance</h3>
+          <p>Optimized for speed and efficiency in your projects.</p>
+        </div>
+      </div>
+    </div>
+    <div class="absolute inset-0 opacity-10 dark:opacity-5">
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+        <defs>
+          <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="3" cy="3" r="2" fill="currentColor" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#dots)" />
+      </svg>
+    </div>
+  </section>`,
+          },
+          cta_creativy: {
+            title: "CTA Section",
+            content: "Sample creative section for a call to action",
+            code: `
+    <section class="relative p-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-xl overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-lg p-8">
+        <h2 class="text-3xl font-bold mb-4">Join Our Community</h2>
+        <p class="mb-6">Connect with like-minded individuals and grow your network in the digital space.</p>
+        <button class="bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-semibold py-2 px-6 rounded-lg hover:opacity-90 transition duration-300">
+          Sign Up Now
+        </button>
+      </div>
+    </section>`,
+          },
+        };
+
+        // Function to get state from storage
+        function getStateFromStorage() {
+          try {
+            const storedState = localStorage.getItem("currentState");
+            return storedState ? JSON.parse(storedState) : null;
+          } catch (error) {
+            console.error("Error parsing state from localStorage:", error);
+            return null;
+          }
+        }
+
+        // Function to create new block type
+        function createNewBlockType(key, title, content) {
+          let currentState = getStateFromStorage() || { blocks: {} };
+          currentState.blocks[key] = { title, content };
+          localStorage.setItem("currentState", JSON.stringify(currentState));
+          console.log(`Block "${key}" saved to local storage`);
+          return currentState;
+        }
+
+        // Function to create component preview
+        function createComponentPreview(key, component) {
+          const componentHtml = `
+          <div id="component-${key}" class="bg-white dark:bg-slate-800 rounded p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">${component.title}<\/h2>
+            <p class="mb-4">${component.content}<\/p>
+            <div class="flex flex-col md:flex-row flex-1 justify-between items-center mb-4 space-y-4 md:space-y-0 md:space-x-4">
+              <div class="flex" role="group">
+                <button id="previewBtn-${key}" type="button" class="px-4 py-2 text-xs font-bold text-slate-900 bg-white border-t border-b border-slate-200 hover:bg-slate-100 hover:text-primary-700 focus:z-10 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600 rounded-l-lg">
+                  Preview
+                <\/button>
+                <button id="htmlBtn-${key}" type="button" class="px-4 py-2 text-xs font-bold text-slate-900 bg-white border-t border-b border-slate-200 hover:bg-slate-100 hover:text-primary-700 focus:z-10 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600">
+                  HTML
+                <\/button>
+                <button id="hbsBtn-${key}" type="button" class="px-4 py-2 text-xs font-bold text-slate-900 bg-white border-t border-b border-slate-200 hover:bg-slate-100 hover:text-primary-700 focus:z-10 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600">
+                  HBS
+                <\/button>
+                <button id="contextBtn-${key}" type="button" class="px-4 py-2 text-xs font-bold text-slate-900 bg-white border border-slate-200 rounded-r-lg hover:bg-slate-100 hover:text-primary-700 focus:z-10 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600">
+                  Context
+                <\/button>
+              <\/div>
+              <div class="flex" role="group">
+                <button id="darkModeBtn-${key}" class="p-2 text-slate-900 bg-white border-t border-b border-slate-200 hover:bg-slate-100 hover:text-primary-700 focus:z-10 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600 rounded-l-lg" title="Toggle Dark Mode">
+                  <i data-lucide="moon" class="w-4 h-4"><\/i>
+                <\/button>
+                <button id="newWindowBtn-${key}" class="p-2 text-slate-900 bg-white border-t border-b border-slate-200 hover:bg-slate-100 hover:text-primary-700 focus:z-10 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600" title="Open in New Window">
+                  <i data-lucide="external-link" class="w-4 h-4"><\/i>
+                <\/button>
+                <button id="copyBtn-${key}" class="p-2 text-slate-900 bg-white border-t border-b border-slate-200 hover:bg-slate-100 hover:text-primary-700 focus:z-10 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600" title="Copy Snippet">
+                  <i data-lucide="copy" class="w-4 h-4"><\/i>
+                <\/button>
+                <button id="saveBtn-${key}" class="p-2 text-slate-900 bg-white border border-slate-200 rounded-r-lg hover:bg-slate-100 hover:text-primary-700 focus:z-10 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600" title="Save to Local Storage">
+                  <i data-lucide="save" class="w-4 h-4"><\/i>
+                <\/button>
+              <\/div>
+            <\/div>
+            <div id="componentContainer-${key}">
+              <div id="previewContent-${key}" class="transition-colors duration-200"><\/div>
+              <pre id="htmlContent-${key}" class="hidden"><code class="hljs !pb-4 text-[13px] bg-slate-900"><\/code><\/pre>
+              <pre id="hbsContent-${key}" class="hidden"><code class="hljs !pb-4 text-[13px] bg-slate-900"><\/code><\/pre>
+              <pre id="contextContent-${key}" class="hidden"><code class="hljs !pb-4 text-[13px] bg-slate-900 language-json"><\/code><\/pre>
+            <\/div>
+          <\/div>
+        `;
+          return componentHtml;
+        }
+
+        // Function to parse HTML and generate HBS and Context
+        function parseHTML(html) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const context = {};
+          let hbsTemplate = html;
+
+          const titleTags = ["h1", "h2", "h3", "h4", "h5", "h6"];
+          let postTitleSet = false;
+
+          titleTags.forEach((tag, index) => {
+            doc.querySelectorAll(tag).forEach((element, i) => {
+              const key = tag === "h1" && !postTitleSet ? "post_title" : `block_title_${tag}_${i + 1}`;
+              context[key] = element.textContent.trim();
+              hbsTemplate = hbsTemplate.replace(element.outerHTML, `<${tag}>{{${key}}}<\/${tag}>`);
+              if (key === "post_title") postTitleSet = true;
+            });
+          });
+
+          doc.querySelectorAll("p").forEach((element, i) => {
+            const key = `paragraph_${i + 1}`;
+            context[key] = element.textContent.trim();
+            hbsTemplate = hbsTemplate.replace(element.outerHTML, `<p>{{${key}}}<\/p>`);
+          });
+
+          doc.querySelectorAll("span").forEach((element, i) => {
+            const key = `span_${i + 1}`;
+            context[key] = element.textContent.trim();
+            hbsTemplate = hbsTemplate.replace(element.outerHTML, `<span>{{${key}}}<\/span>`);
+          });
+
+          doc.querySelectorAll("a").forEach((element, i) => {
+            const href = element.getAttribute("href");
+            const text = element.textContent.trim();
+            if (href) {
+              const linkKey = `link_${i + 1}`;
+              context[linkKey] = { href, text };
+              hbsTemplate = hbsTemplate.replace(element.outerHTML, `<a href="{{${linkKey}.href}}">{{${linkKey}.text}}<\/a>`);
+            }
+          });
+
+          return { hbsTemplate, context };
+        }
+
+        // Function to initialize component
+        function initializeComponent(key, component) {
+          const previewContent = document.getElementById(`previewContent-${key}`);
+          const htmlContent = document.getElementById(`htmlContent-${key}`);
+          const hbsContent = document.getElementById(`hbsContent-${key}`);
+          const contextContent = document.getElementById(`contextContent-${key}`);
+
+          previewContent.innerHTML = component.code;
+          htmlContent.querySelector("code").textContent = component.code.trim();
+
+          const { hbsTemplate, context } = parseHTML(component.code);
+          hbsContent.querySelector("code").textContent = hbsTemplate.trim();
+          contextContent.querySelector("code").textContent = JSON.stringify(context, null, 2);
+
+          hljs.highlightElement(htmlContent.querySelector("code"));
+          hljs.highlightElement(hbsContent.querySelector("code"));
+          hljs.highlightElement(contextContent.querySelector("code"));
+
+          // Toggle views
+          const toggleView = (viewType) => {
+            [previewContent, htmlContent, hbsContent, contextContent].forEach((el) => el.classList.add("hidden"));
+            document.getElementById(`${viewType}Content-${key}`).classList.remove("hidden");
+
+            // Update button styles
+            [`previewBtn-${key}`, `htmlBtn-${key}`, `hbsBtn-${key}`, `contextBtn-${key}`].forEach((btnId) => {
+              const btn = document.getElementById(btnId);
+              btn.classList.remove("bg-primary-600", "text-white");
+              btn.classList.add("bg-white", "text-slate-900", "dark:bg-slate-700", "dark:text-white");
+            });
+
+            const activeBtn = document.getElementById(`${viewType}Btn-${key}`);
+            activeBtn.classList.remove("bg-white", "text-slate-900", "dark:bg-slate-700", "dark:text-white");
+            activeBtn.classList.add("bg-primary-600", "text-white");
+
+            if (viewType !== "preview") {
+              hljs.highlightElement(document.getElementById(`${viewType}Content-${key}`).querySelector("code"));
+            }
+          };
+
+          document.getElementById(`previewBtn-${key}`).addEventListener("click", () => toggleView("preview"));
+          document.getElementById(`htmlBtn-${key}`).addEventListener("click", () => toggleView("html"));
+          document.getElementById(`hbsBtn-${key}`).addEventListener("click", () => toggleView("hbs"));
+          document.getElementById(`contextBtn-${key}`).addEventListener("click", () => toggleView("context"));
+
+          // Toggle dark mode for preview area only
+          document.getElementById(`darkModeBtn-${key}`).addEventListener("click", () => {
+            document.getElementById(`componentContainer-${key}`).classList.toggle("dark");
+          });
+
+          // Open in new window
+          document.getElementById(`newWindowBtn-${key}`).addEventListener("click", () => {
+            const newWindow = window.open("", "_blank");
+            newWindow.document.write(`
+            <html>
+              <head>
+                <script src="https://cdn.tailwindcss.com"><\/script>
+                <style>
+                  body { display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+                <\/style>
+              <\/head>
+              <body>
+                ${component.code}
+              <\/body>
+            <\/html>
+          `);
+          });
+
+          // Copy snippet
+          document.getElementById(`copyBtn-${key}`).addEventListener("click", () => {
+            navigator.clipboard.writeText(component.code.trim()).then(() => {
+              document.getElementById("copyFeedback").style.display = "block";
+              setTimeout(() => {
+                document.getElementById("copyFeedback").style.display = "none";
+              }, 2000);
+            });
+          });
+
+          // Save to local storage
+          document.getElementById(`saveBtn-${key}`).addEventListener("click", () => {
+            const currentState = createNewBlockType(key, component.title, component.code);
+            document.getElementById("copyFeedback").textContent = "Saved to local storage!";
+            document.getElementById("copyFeedback").style.display = "block";
+            setTimeout(() => {
+              document.getElementById("copyFeedback").style.display = "none";
+              document.getElementById("copyFeedback").textContent = "Copied to clipboard!";
+            }, 2000);
+
+            // Disable the component
+            disableComponent(key);
+          });
+
+          // Check if the component is already saved in local storage
+          const savedState = getStateFromStorage();
+          if (savedState && savedState.blocks && savedState.blocks[key]) {
+            disableComponent(key);
+          }
+
+          // Initial view
+          toggleView("preview");
+
+          // Re-initialize Lucide icons
+          lucide.createIcons();
+        }
+
+        // Function to disable component
+        function disableComponent(key) {
+          const componentElement = document.getElementById(`component-${key}`);
+          componentElement.classList.add("component-disabled");
+
+          // Update the button to show it's been added
+          const saveBtn = document.getElementById(`saveBtn-${key}`);
+          saveBtn.innerHTML = '<i data-lucide="check"><\/i>';
+          saveBtn.classList.add("text-green-500");
+          saveBtn.disabled = true;
+
+          // Re-initialize Lucide icons for the updated button
+          lucide.createIcons();
+        }
+
+        // Render all components
+        const componentsContainer = document.getElementById("componentsContainer");
+        for (const [key, component] of Object.entries(components)) {
+          componentsContainer.innerHTML += createComponentPreview(key, component);
+        }
+
+        // Initialize all components
+        for (const [key, component] of Object.entries(components)) {
+          initializeComponent(key, component);
+        }
+
+        // Dark mode toggle functionality
+        const darkModeToggle = document.getElementById("dark-mode-toggle");
+        const isDarkMode = localStorage.getItem("darkMode") === "true" || (!("darkMode" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.toggle("dark", isDarkMode);
+
+        darkModeToggle.addEventListener("click", () => {
+          document.documentElement.classList.toggle("dark");
+          localStorage.setItem("darkMode", document.documentElement.classList.contains("dark"));
+          const icon = darkModeToggle.querySelector("i");
+          icon.setAttribute("data-lucide", document.documentElement.classList.contains("dark") ? "sun" : "moon");
+          lucide.createIcons();
+        });
+
+        // Sidebar toggle functionality
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        const sidebar = document.getElementById("sidebar");
+        sidebarToggle.addEventListener("click", () => {
+          sidebar.classList.toggle("open");
+        });
+
+        document.addEventListener("click", (event) => {
+          const isMobile = window.innerWidth < 768;
+          const isClickInsideSidebar = sidebar.contains(event.target);
+          const isClickOnToggle = sidebarToggle.contains(event.target);
+
+          if (isMobile && !isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains("open")) {
+            sidebar.classList.remove("open");
+          }
+        });
+
+        // Export JSON button functionality
+        document.getElementById("exportJsonBtn").addEventListener("click", () => {
+          const currentState = getStateFromStorage();
+          if (currentState) {
+            const jsonString = JSON.stringify(currentState, null, 2);
+            const blob = new Blob([jsonString], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "exported_components.json";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          } else {
+            alert("No saved components found in local storage.");
+          }
+        });
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+      });
+    </script>
+  </body>
+</html>
