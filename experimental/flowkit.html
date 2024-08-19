@@ -1,0 +1,244 @@
+<html>
+<head>
+  <base href="./">
+  <title>FlowKit UI</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="Ready layout for viewing TailwindCSS components with the ability to save them and convert them to HandlebarsJS Sintax">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="icon" type="image/png" sizes="32x32" href="https://placehold.co/32/0284c7/white/?text=BY" />
+  <style>
+    *,
+    html * {
+      scrollbar-width: thin;
+      scrollbar-color: #495565 #bacbce;
+    }
+    *::-webkit-scrollbar,
+    html *::-webkit-scrollbar {
+      height: 12px;
+      width: 12px;
+    }
+    *::-webkit-scrollbar-track,
+    html *::-webkit-scrollbar-track {
+      background: #bacbce;
+    }
+    *::-webkit-scrollbar-thumb,
+    html *::-webkit-scrollbar-thumb {
+      background-color: #495565;
+      border-radius: 8px;
+      border: 5px solid #bacbce;
+    }
+    @media (max-width: 767px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+    }
+  </style>
+  <style>
+  *,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Lato, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }.fixed{position:fixed}.sticky{position:sticky}.top-0{top:0px}.z-40{z-index:40}.z-50{z-index:50}.mb-1{margin-bottom:0.25rem}.mb-6{margin-bottom:1.5rem}.ml-1{margin-left:0.25rem}.mr-1{margin-right:0.25rem}.mr-2{margin-right:0.5rem}.block{display:block}.inline{display:inline}.flex{display:flex}.h-4{height:1rem}.h-6{height:1.5rem}.h-full{height:100%}.h-screen{height:100vh}.w-4{width:1rem}.w-6{width:1.5rem}.w-64{width:16rem}.w-full{width:100%}.flex-1{flex:1 1 0%}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-between{justify-content:space-between}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.rounded-lg{border-radius:0.5rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-r{border-right-width:1px}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity))}.bg-primary-100{--tw-bg-opacity:1;background-color:rgb(224 242 254 / var(--tw-bg-opacity))}.bg-primary-600{--tw-bg-opacity:1;background-color:rgb(2 132 199 / var(--tw-bg-opacity))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity))}.p-4{padding:1rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-4{padding-left:1rem;padding-right:1rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.pb-\[\.25rem\]{padding-bottom:.25rem}.pb-\[\.35rem\]{padding-bottom:.35rem}.pt-2{padding-top:0.5rem}.font-sans{font-family:Lato, sans-serif}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-medium{font-weight:500}.font-semibold{font-weight:600}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity))}.text-primary-600{--tw-text-opacity:1;color:rgb(2 132 199 / var(--tw-text-opacity))}.text-primary-700{--tw-text-opacity:1;color:rgb(3 105 161 / var(--tw-text-opacity))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-200{transition-duration:200ms}.hover\:bg-primary-700:hover{--tw-bg-opacity:1;background-color:rgb(3 105 161 / var(--tw-bg-opacity))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity))}.hover\:text-primary-700:hover{--tw-text-opacity:1;color:rgb(3 105 161 / var(--tw-text-opacity))}.focus\:ring-0:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.dark\:border-slate-600:is(.dark *){--tw-border-opacity:1;border-color:rgb(71 85 105 / var(--tw-border-opacity))}.dark\:border-slate-700:is(.dark *){--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity))}.dark\:bg-slate-900:is(.dark *){--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity))}.dark\:bg-primary-700:is(.dark *){--tw-bg-opacity:1;background-color:rgb(3 105 161 / var(--tw-bg-opacity))}.dark\:bg-slate-700:is(.dark *){--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity))}.dark\:bg-slate-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity))}.dark\:text-slate-200:is(.dark *){--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity))}.dark\:text-primary-100:is(.dark *){--tw-text-opacity:1;color:rgb(224 242 254 / var(--tw-text-opacity))}.dark\:text-white:is(.dark *){--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.dark\:hover\:bg-slate-600:hover:is(.dark *){--tw-bg-opacity:1;background-color:rgb(71 85 105 / var(--tw-bg-opacity))}.dark\:hover\:bg-slate-700:hover:is(.dark *){--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity))}.dark\:hover\:text-white:hover:is(.dark *){--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}@media (min-width: 768px){.md\:relative{position:relative}.md\:hidden{display:none}.md\:translate-x-0{--tw-translate-x:0px;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}}
+  </style>
+</head>
+
+<body
+  class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 font-sans transition-colors duration-200">
+  <div class="flex h-screen">
+    <aside id="sidebar"
+      class="sidebar w-64 bg-white dark:bg-slate-800 border-r dark:border-slate-600 overflow-hidden p-4 fixed h-full z-50 md:relative md:translate-x-0">
+      <h1 class="text-xl font-semibold mb-6 flex items-center">
+        <i data-lucide="layout-dashboard" stroke-width="2.7"
+          class="text-primary-600 dark:text-primary-100 w-4 h-4 mr-1"></i>
+        <span><span class="text-primary-600">Build</span>Y TW</span>
+      </h1>
+      <nav>
+        <ul class="space-y-2">
+          <li><a href="/"
+              class="block px-4 py-2 rounded-lg bg-primary-100 text-primary-700 dark:bg-primary-700 dark:text-primary-100 text-sm"><i
+                data-lucide="layout-list"
+                class="text-primary-600 dark:text-primary-100 w-4 h-4 mb-1 mr-1 inline"></i>Components</a></li>
+          <li><a href="https://github.com/hinddy/tailwind-builder/wiki/"
+              class="block px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-sm"><i
+                data-lucide="book-open-check"
+                class="text-primary-600 dark:text-primary-100 w-4 h-4 mb-1 mr-1 inline"></i>Documentation</a></li>
+          <li><a href="https://github.com/hinddy/tailwind-builder/"
+              class="block px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-sm"><i
+                data-lucide="github"
+                class="text-primary-600 dark:text-primary-100 w-4 h-4 mb-1 mr-1 inline"></i>Releases<span
+                class="ml-1 text-slate-500 bg-slate-100 font-medium px-2">v.1.0.1</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="flex-1 flex flex-col bg-slate-100 dark:bg-slate-900">
+      <header class="sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 flex justify-between items-center">
+        <button id="sidebar-toggle" class="md:hidden">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+        <div class="flex items-center">
+          <input id="components-url" type="text" placeholder="Components URL" class="w-64 py-2 px-2 text-slate-900 bg-white border border-slate-200 hover:bg-slate-100 hover:text-primary-700 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600 rounded-lg text-xs mr-2">
+          <button id="apply-url" class="pt-2 pb-[.25rem] px-2 text-slate-900 bg-white border border-slate-200 hover:bg-slate-100 hover:text-primary-700 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600 rounded-lg">
+            <i data-lucide="link-2" class="w-4 h-4 mb-1"></i>
+          </button>
+        </div>
+        <div class="flex">
+          <button id="dark-mode-toggle" class="pt-2 pb-[.25rem] px-2 text-slate-900 bg-white border border-slate-200 hover:bg-slate-100 hover:text-primary-700 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600 rounded-lg mr-2">
+            <i data-lucide="sun" class="w-4 h-4 mb-1"></i>
+          </button>
+          <button id="exportJsonBtn" class="bg-primary-600 hover:bg-primary-700 text-white text-xs pt-2 pb-[.35rem] px-4 rounded-lg">
+            <i data-lucide="download" class="w-4 h-4 mb-1 mr-1 inline"></i>Export to JSON
+          </button>
+        </div>
+      </header>
+      <div class="flex-1">
+        <iframe id="editorIframe" class="w-full h-full" src="./editorkit.html"></iframe>
+      </div>
+        
+    </main>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Sidebar toggle functionality
+      const sidebarToggle = document.getElementById("sidebar-toggle");
+      const sidebar = document.getElementById("sidebar");
+      sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+      });
+
+      document.addEventListener("click", (event) => {
+        const isMobile = window.innerWidth < 768;
+        const isClickInsideSidebar = sidebar.contains(event.target);
+        const isClickOnToggle = sidebarToggle.contains(event.target);
+
+        if (isMobile && !isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains("open")) {
+          sidebar.classList.remove("open");
+        }
+      });
+
+      // Export JSON button functionality
+      document.getElementById("exportJsonBtn").addEventListener("click", () => {
+        const currentState = getStateFromStorage();
+        if (currentState) {
+          const jsonString = JSON.stringify(currentState, null, 2);
+          const blob = new Blob([jsonString], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "exported_components.json";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } else {
+          alert("No saved components found in local storage.");
+        }
+      });
+    });
+  </script>
+  <script>
+      // Function to get state from storage
+      function getStateFromStorage() {
+        try {
+          const storedState = localStorage.getItem("currentState");
+          return storedState ? JSON.parse(storedState) : null;
+        } catch (error) {
+          console.error("Error parsing state from localStorage:", error);
+          return null;
+        }
+      }
+      
+// Editor and Dark Mode
+const editorIframe = document.getElementById('editorIframe');
+
+function sendMessageToIframe(message) {
+  if (editorIframe.contentWindow) {
+    editorIframe.contentWindow.postMessage(message, '*');
+  }
+}
+
+function initializeIframe() {
+  const isDarkMode = localStorage.getItem("darkMode") === "true";
+  sendMessageToIframe({
+    type: 'init',
+    darkMode: isDarkMode
+  });
+}
+
+editorIframe.onload = initializeIframe;
+
+function toggleDarkMode() {
+  const isDarkMode = localStorage.getItem("darkMode") === "true";
+  const newDarkMode = !isDarkMode;
+  localStorage.setItem("darkMode", newDarkMode);
+  sendMessageToIframe({
+    type: 'toggleDarkMode',
+    darkMode: newDarkMode
+  });
+  
+  if (newDarkMode) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+}
+
+document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+
+const initialDarkMode = localStorage.getItem("darkMode") === "true";
+if (initialDarkMode) {
+  document.documentElement.classList.add('dark');
+}
+  </script>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const urlInput = document.getElementById('components-url');
+  const applyUrlButton = document.getElementById('apply-url');
+  
+  const savedProject = JSON.parse(localStorage.getItem('componentYProject'));
+  if (savedProject && savedProject.publicUrl) {
+    urlInput.value = savedProject.publicUrl;
+  }
+  
+  applyUrlButton.addEventListener('click', function() {
+    const newUrl = urlInput.value.trim();
+    if (newUrl) {
+      const currentProject = JSON.parse(localStorage.getItem('componentYProject')) || {};
+      currentProject.publicUrl = newUrl;
+      localStorage.setItem('componentYProject', JSON.stringify(currentProject));
+      
+      loadComponents(newUrl);
+      
+      location.reload();
+    }
+  });
+  
+  async function loadComponents(url) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const components = await response.json();
+      
+      console.log('Компоненты загружены:', components);
+    } catch (error) {
+      console.error('Ошибка при загрузке компонентов:', error);
+    }
+  }
+
+  if (urlInput.value) {
+    loadComponents(urlInput.value);
+  }
+});
+  </script>
+</body>
+</html>
