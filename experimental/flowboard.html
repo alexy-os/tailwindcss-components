@@ -1,1 +1,382 @@
+<html><head><base href="https://buildy.tw/componenty/"><title>ComponentY - Design System Builder</title><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><link rel="icon" type="image/png" sizes="32x32" href="https://placehold.co/32/0284c7/white/?text=CY" /><script src="https://cdn.tailwindcss.com"></script><link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet"><script src="https://unpkg.com/lucide@latest"></script><script>tailwind.config = {darkMode: "class",theme: {extend: {colors: {primary: {100: "#e0f2fe",600: "#0284c7",700: "#0369a1",},secondary: '#4B5DFF',},},fontFamily: {sans: ["Lato", "sans-serif"],},},};</script><style type="text/tailwindcss">@layer utilities {.by-body {@apply bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 font-sans transition-colors duration-200;}.by-sidebar {@apply w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 p-4 fixed h-full z-50 md:relative md:translate-x-0;}.by-sidebar-title {@apply text-xl font-semibold mb-6 flex items-center;}.by-nav-title {@apply text-xl font-semibold;}.by-sidebar-icon {@apply text-primary-600 dark:text-primary-100 w-4 h-4 mr-1;}.by-btn-light {@apply block px-4 py-2 rounded-lg text-sm;}.by-btn-light-active {@apply bg-primary-100 text-primary-700 dark:bg-primary-700 dark:text-primary-100;}.by-btn-light-inactive {@apply hover:bg-slate-100 dark:hover:bg-slate-700;}.by-main-content {@apply flex-1 flex-col overflow-x-hidden overflow-y-auto bg-slate-100 dark:bg-slate-900;}.by-header {@apply sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 flex justify-between items-center;}.by-btn {@apply pt-2 pb-[.25rem] px-2 text-slate-900 bg-white border border-slate-200 hover:bg-slate-100 hover:text-primary-700 focus:ring-0 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:text-white dark:hover:bg-slate-600 rounded-lg mr-2;}.by-btn-primary {@apply bg-primary-600 hover:bg-primary-700 text-white text-xs pt-2 pb-[.35rem] px-4 rounded-lg;}.by-modal {@apply fixed inset-0 bg-black bg-opacity-50 p-4 flex items-center justify-center hidden z-[55];}.by-modal-content {@apply bg-white dark:bg-slate-900 p-6 rounded-lg w-full max-w-lg;}.by-textarea {@apply w-full p-2 mb-4 rounded-[8px] text-sm bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-500;}}</style><style>*,html * {scrollbar-width: thin;scrollbar-color: #495565 #bacbce;}*::-webkit-scrollbar,html *::-webkit-scrollbar {height: 12px;width: 12px;}*::-webkit-scrollbar-track,html *::-webkit-scrollbar-track {background: #bacbce;}*::-webkit-scrollbar-thumb,html *::-webkit-scrollbar-thumb {background-color: #495565;border-radius: 8px;border: 5px solid #bacbce;}@media (max-width: 767px) {.sidebar {transform: translateX(-100%);transition: transform 0.3s ease-in-out;}.sidebar.open {transform: translateX(0);}}</style></head><body class="by-body"><div class="flex h-screen"><aside id="sidebar" class="sidebar by-sidebar"><div class="by-sidebar-title"><i data-lucide="layout-dashboard" stroke-width="2.7" class="by-sidebar-icon"></i><span><span class="text-sky-600">Build</span>Y TW</span></div><nav><ul class="space-y-2"><li><a href="/" class="by-btn-light by-btn-light-active"><i data-lucide="layout-list" class="by-sidebar-icon mb-1 inline"></i>Components</a></li><li><a href="https://github.com/hinddy/tailwind-builder/wiki/" class="by-btn-light by-btn-light-inactive"><i data-lucide="book-open-check" class="by-sidebar-icon mb-1 inline"></i>Documentation</a></li><li><a href="https://github.com/hinddy/tailwind-builder/" class="by-btn-light by-btn-light-inactive"><i data-lucide="github" class="by-sidebar-icon mb-1 inline"></i>Releases<span class="ml-1 text-slate-500 bg-slate-100 font-medium px-2">v.1.0.1</span></a></li></ul></nav></aside><main class="by-main-content"><header class="by-header"><button id="sidebar-toggle" class="md:hidden"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button><span class="by-nav-title">Component<span class="text-sky-600">Y</span></span><div class="flex"><button id="dark-mode-toggle"><i data-lucide="sun" class="w-5 h-5"></i></button></div></header><div class="container max-w-7xl mx-auto"><div class="lg:hidden text-slate-800 dark:text-slate-300 text-xs">The system design builder interface is only accessible from large screens. Try logging in from a PC</div><div class="hidden lg:flex h-[calc(100vh-64px)]"><div class="w-4/5 p-4 flex flex-col"><h1 class="text-lg font-bold text-slate-700 dark:text-slate-300 mb-6">Design System Builder</h1><div id="fileUploadArea" class="flex-grow flex items-center justify-center"><input type="file" id="fileInput" multiple accept=".html" class="hidden" /><button id="loadFilesBtn" class="by-btn-light by-btn-light-active hover:bg-sky-600 hover:text-white font-bold py-2 px-4 rounded-lg transition duration-300 text-sm">Load HTML Files</button></div><div id="columnsArea" class="flex-grow hidden"><div class="flex h-full space-x-4"><div class="flex-1 bg-white dark:bg-slate-800 rounded-lg shadow-md p-4 overflow-y-auto custom-scrollbar"><h2 class="text-lg mb-4"><i data-lucide="folder-heart" class="w-5 h-5 mb-1 mr-1 inline"></i>Done</h2><ul id="doneList" class="space-y-2"></ul></div><div class="flex-1 bg-white dark:bg-slate-800 rounded-lg shadow-md p-4 overflow-y-auto custom-scrollbar"><h2 class="text-lg mb-4"><i data-lucide="folder-cog" class="w-5 h-5 mb-1 mr-1 inline"></i>Process</h2><ul id="processList" class="space-y-2"></ul></div><div class="flex-1 bg-white dark:bg-slate-800 rounded-lg shadow-md p-4 overflow-y-auto custom-scrollbar"><h2 class="text-lg mb-4"><i data-lucide="folder-clock" class="w-5 h-5 mb-1 mr-1 inline"></i>Pending</h2><ul id="pendingList" class="space-y-2"></ul></div></div></div></div><div class="w-1/5 bg-white dark:bg-slate-800 p-4 border-l border-slate-200 dark:border-slate-700 overflow-y-auto custom-scrollbar"><h2 class="font-bold mb-4">Setting</h2><div class="mb-6"><h3 class="text-xs font-bold mb-2">Public URL</h3><div class="flex items-center relative"><div id="publicUrlDisplay" placeholder="prefix-" class="flex-grow w-full p-1 text-xs rounded-l border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 focus:outline-none focus:ring focus:ring-1 focus:border-sky-500 break-all"></div><button id="copyUrlBtn" class="absolute -bottom-1 -right-1 text-slate-500 dark:text-slate-300 dark:hover:text-sky-400 hover:text-sky-500 transition-colors duration-100"><i data-lucide="copy" class="w-4 h-4"></i></button></div></div><form id="configForm" class="space-y-4"><div><label for="ignorePrefix" class="block text-sm font-medium mb-1">Ignore Prefix</label><input type="text" id="ignorePrefix" name="ignorePrefix" placeholder="prefix-" class="w-full p-1 text-xs rounded border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 focus:outline-none focus:ring focus:ring-1 focus:border-sky-500" readonly></div><div><label for="exportFileName" class="block text-sm font-medium mb-1">Export File</label><div class="flex w-full"><input type="text" id="exportFileName" name="exportFileName" value="components" class="w-full p-1 text-xs rounded border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 focus:outline-none focus:ring focus:ring-1 focus:border-sky-500"><span class="ml-1 mt-1 text-xs text-sky-500">.json</span></div></div></form><div class="space-y-2 mt-6"><button id="importJsonBtn" class="w-full bg-sky-500 dark:bg-slate-700 dark:hover:bg-slate-600 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 text-xs">Import JSON</button><button id="exportJsonBtn" class="w-full bg-sky-500 dark:bg-slate-700 dark:hover:bg-slate-600 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 text-xs">Export JSON</button><button id="downloadProjectBtn" class="w-full bg-sky-500 dark:bg-slate-700 dark:hover:bg-slate-600 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 text-xs">Save Project</button><button id="clearProjectBtn" class="w-full bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-sky-600 dark:text-slate-300 font-bold py-2 px-4 rounded-lg transition duration-300 border border-sky-600 dark:border-slate-400 text-xs">Clear Project</button></div></div></div></div></main></div><script>// Initialize Lucide icons
+lucide.createIcons();
 
+class ComponentY {
+  constructor() {
+    this.designSystemCombine = new DesignSystemCombine();
+    this.fileList = [];
+    this.initEventListeners();
+    this.loadFromLocalStorage();
+  }
+
+  initEventListeners() {
+    document.getElementById('loadFilesBtn').addEventListener('click', () => this.loadFiles());
+    document.getElementById('importJsonBtn').addEventListener('click', () => this.importJson());
+    document.getElementById('exportJsonBtn').addEventListener('click', () => this.exportJson());
+    document.getElementById('downloadProjectBtn').addEventListener('click', () => this.downloadProject());
+    document.getElementById('clearProjectBtn').addEventListener('click', () => this.clearProject());
+    document.getElementById('fileInput').addEventListener('change', (e) => this.handleFileSelect(e));
+    document.getElementById('ignorePrefix').addEventListener('change', (e) => this.updateIgnorePrefix(e.target.value));
+    document.getElementById('dark-mode-toggle').addEventListener('click', () => this.toggleDarkMode());
+    document.getElementById('exportFileName').addEventListener('change', (e) => this.updateExportFileName(e.target.value));
+    document.getElementById('copyUrlBtn').addEventListener('click', () => this.copyPublicUrl());
+  }
+
+  loadFiles() {
+    document.getElementById('fileInput').click();
+  }
+
+  handleFileSelect(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+      this.fileList = Array.from(files);
+      this.processFiles();
+    }
+  }
+
+  async processFiles() {
+    document.getElementById('fileUploadArea').classList.add('hidden');
+    document.getElementById('columnsArea').classList.remove('hidden');
+
+    const fileNames = this.fileList.map(file => file.name);
+    this.designSystemCombine.detectAndSetIgnorePrefix(fileNames);
+
+    for (const file of this.fileList) {
+      const content = await this.readFileContent(file);
+      this.designSystemCombine.addFile(file.name, content);
+    }
+
+    this.designSystemCombine.processFiles();
+    this.updateUI();
+    this.saveToLocalStorage();
+  }
+
+  readFileContent(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = (e) => reject(e);
+      reader.readAsText(file);
+    });
+  }
+
+  updateUI() {
+    this.updateList('doneList', this.designSystemCombine.project.done);
+    this.updateList('processList', this.designSystemCombine.project.process);
+    this.updateList('pendingList', this.designSystemCombine.project.pending);
+    this.updatePublicUrl();
+    this.updateIgnorePrefixInput();
+    this.updateExportFileNameInput();
+  }
+
+  updateList(listId, items) {
+    const list = document.getElementById(listId);
+    list.innerHTML = '';
+    items.forEach(item => {
+      const li = document.createElement('li');
+      li.className = 'text-xs italic p-1';
+      li.textContent = `/${item}`;
+      list.appendChild(li);
+    });
+  }
+
+  updatePublicUrl() {
+    document.getElementById('publicUrlDisplay').textContent = this.designSystemCombine.publicUrl;
+  }
+
+  updateIgnorePrefixInput() {
+    document.getElementById('ignorePrefix').value = this.designSystemCombine.ignorePrefix;
+  }
+
+  updateExportFileNameInput() {
+    document.getElementById('exportFileName').value = this.designSystemCombine.exportFileName;
+  }
+
+  updateIgnorePrefix(value) {
+    this.designSystemCombine.setIgnorePrefix(value);
+    this.updateUI();
+    this.saveToLocalStorage();
+  }
+
+  updateExportFileName(value) {
+    this.designSystemCombine.setExportFileName(value);
+    this.saveToLocalStorage();
+  }
+
+  importJson() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = e => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = event => {
+        const importedData = JSON.parse(event.target.result);
+        this.designSystemCombine.importComponents(importedData);
+        this.updateUI();
+        this.saveToLocalStorage();
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }
+
+  exportJson() {
+    const exportData = this.designSystemCombine.exportComponents();
+    this.downloadJsonFile(JSON.stringify(exportData, null, 2), `${this.designSystemCombine.exportFileName}.json`);
+  }
+
+  downloadProject() {
+    const projectData = this.designSystemCombine.exportProject();
+    this.downloadJsonFile(JSON.stringify(projectData, null, 2), 'project.json');
+  }
+
+  downloadJsonFile(content, fileName) {
+    const blob = new Blob([content], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  saveToLocalStorage() {
+    localStorage.setItem('componentYProject', JSON.stringify(this.designSystemCombine.exportProject()));
+  }
+
+  loadFromLocalStorage() {
+    const savedProject = localStorage.getItem('componentYProject');
+    if (savedProject) {
+      this.designSystemCombine.importProject(JSON.parse(savedProject));
+      this.updateUI();
+      document.getElementById('fileUploadArea').classList.add('hidden');
+      document.getElementById('columnsArea').classList.remove('hidden');
+    }
+  }
+
+  clearProject() {
+    localStorage.removeItem('componentYProject');
+    this.designSystemCombine = new DesignSystemCombine();
+    this.fileList = [];
+    this.updateUI();
+    document.getElementById('columnsArea').classList.add('hidden');
+    document.getElementById('fileUploadArea').classList.remove('hidden');
+  }
+
+  toggleDarkMode() {
+    document.documentElement.classList.toggle('dark');
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    localStorage.setItem('darkMode', isDarkMode);
+  }
+
+  copyPublicUrl() {
+    const publicUrl = this.designSystemCombine.publicUrl;
+    navigator.clipboard.writeText(publicUrl).then(() => {
+      alert('Public URL copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+    });
+  }
+}
+
+class DesignSystemCombine {
+  constructor() {
+    this.project = {
+      metadata: { name: '', description: '', author: '', version: '1.0.0' },
+      done: [],
+      process: [],
+      pending: []
+    };
+    this.components = {};
+    this.publicUrl = this.generatePublicUrl();
+    this.ignorePrefix = 'buildy-tw-prototype-';
+    this.exportFileName = 'components';
+  }
+
+  setIgnorePrefix(prefix) {
+    this.ignorePrefix = prefix;
+    this.regenerateComponentIds();
+  }
+
+  setExportFileName(fileName) {
+    this.exportFileName = fileName;
+  }
+
+  regenerateComponentIds() {
+    const newComponents = {};
+    Object.entries(this.components).forEach(([oldId, component]) => {
+      const fileName = component.slug;
+      if (fileName) {
+        const newId = this.generateComponentId(fileName);
+        newComponents[newId] = component;
+      }
+    });
+    this.components = newComponents;
+  }
+
+  addFile(fileName, content) {
+    const sections = this.extractSections(content);
+    if (sections.length > 0) {
+      this.project.done.push(fileName);
+      const componentId = this.generateComponentId(fileName);
+      sections.forEach((section, index) => {
+        const sectionId = index === 0 ? componentId : `${componentId}_${index + 1}`;
+        this.components[sectionId] = {
+          slug: fileName,
+          title: this.generateTitle(fileName),
+          excerpt: this.extractExcerpt(section),
+          content: section
+        };
+      });
+    } else {
+      this.project.process.push(fileName);
+    }
+  }
+
+  generateComponentId(fileName) {
+    return fileName.replace(/\.html$/, '').replace(this.ignorePrefix, '').toLowerCase().replace(/-/g, '_');
+  }
+
+  generateTitle(fileName) {
+    return fileName.replace(/\.html$/, '').replace(this.ignorePrefix, '').split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  }
+
+  extractSections(content) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    return Array.from(doc.querySelectorAll('section')).map(section => section.outerHTML);
+  }
+
+  extractExcerpt(sectionHtml) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(sectionHtml, 'text/html');
+    const heading = doc.querySelector('h1, h2, h3');
+    return heading ? heading.textContent : 'Short Description';
+  }
+
+  processFiles() {
+    // Any additional processing can be done here if needed
+  }
+
+  generatePublicUrl() {
+    const hash = Math.random().toString(36).substring(2, 15);
+    const currentUrl = new URL(window.location.href);
+    return `${currentUrl.origin}/componenty/${hash}.json`;
+  }
+
+  importProject(projectData) {
+    this.project = projectData.project;
+    this.components = projectData.components;
+    this.ignorePrefix = projectData.ignorePrefix || this.ignorePrefix;
+    this.publicUrl = projectData.publicUrl || this.generatePublicUrl();
+    this.exportFileName = projectData.exportFileName || 'components';
+  }
+
+  importComponents(componentsData) {
+    const newDone = [];
+    const newPending = [...this.project.done, ...this.project.pending];
+
+    Object.entries(componentsData).forEach(([componentId, component]) => {
+      const fileName = component.slug;
+      if (fileName) {
+        if (!newDone.includes(fileName)) {
+          newDone.push(fileName);
+        }
+        const index = newPending.indexOf(fileName);
+        if (index > -1) {
+          newPending.splice(index, 1);
+        }
+      }
+    });
+
+    this.project.done = newDone;
+    this.project.pending = newPending;
+    this.components = componentsData;
+  }
+
+  exportProject() {
+    return {
+      project: this.project,
+      components: this.components,
+      ignorePrefix: this.ignorePrefix,
+      publicUrl: this.publicUrl,
+      exportFileName: this.exportFileName
+    };
+  }
+
+  exportComponents() {
+    const exportedComponents = {};
+    Object.entries(this.components).forEach(([id, component]) => {
+      const cleanId = id.replace(`${this.ignorePrefix}_`, '');
+      exportedComponents[cleanId] = component;
+    });
+    return exportedComponents;
+  }
+
+  detectAndSetIgnorePrefix(fileNames) {
+    if (fileNames.length === 0) return;
+
+    const commonPrefix = this.findCommonPrefix(fileNames);
+    if (commonPrefix) {
+      this.setIgnorePrefix(commonPrefix);
+    }
+  }
+
+  findCommonPrefix(strings) {
+    if (strings.length === 0) return '';
+    if (strings.length === 1) return strings[0].split('-').slice(0, -1).join('-') + '-';
+
+    let prefix = '';
+    const firstString = strings[0];
+    for (let i = 0; i < firstString.length; i++) {
+      const char = firstString[i];
+      if (strings.every(str => str[i] === char)) {
+        prefix += char;
+      } else {
+        break;
+      }
+    }
+
+    // Ensure the prefix ends at a complete word (assuming words are separated by '-')
+    const lastDashIndex = prefix.lastIndexOf('-');
+    if (lastDashIndex !== -1) {
+      prefix = prefix.substring(0, lastDashIndex + 1);
+    }
+
+    return prefix;
+  }
+}
+
+// Initialize the application
+const app = new ComponentY();
+
+// Public Url
+const currentUrl = new URL(window.location.href);
+document.getElementById('publicUrlDisplay').textContent = `${currentUrl.origin}/componenty/`;
+
+// Check and set initial dark mode
+if (localStorage.getItem('darkMode') === 'true') {
+  document.documentElement.classList.add('dark');
+}
+
+// Sidebar toggle functionality
+const sidebarToggle = document.getElementById("sidebar-toggle");
+const sidebar = document.getElementById("sidebar");
+
+sidebarToggle.addEventListener("click", () => {
+  sidebar.classList.toggle("open");
+});
+
+document.addEventListener("click", (event) => {
+  const isMobile = window.innerWidth < 768;
+  const isClickInsideSidebar = sidebar.contains(event.target);
+  const isClickOnToggle = sidebarToggle.contains(event.target);
+
+  if (isMobile && !isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains("open")) {
+    sidebar.classList.remove("open");
+  }
+});
+</script></body></html>
